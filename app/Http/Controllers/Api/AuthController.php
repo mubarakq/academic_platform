@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Models\Role;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\hash;
-use App\Controllers\Controller;
-use App\Model\User;
+use Illuminate\Support\Facades\Hash;
+use App\Models\User;
 
 
 class AuthController
@@ -21,9 +21,14 @@ class AuthController
             'email'=> $request->email,
             'password'=> Hash::make($request->password),
         ]);
+
+        $role = Role::firstOrCreate(['name' => 'user']);
+        $user->roles()->syncWithoutDetaching([$role->id]);
+
         $token = $user->createToken('api-token')->plainTextToken;
+
         return response()->json([
-            'user'=>$user,
+            'user'=>$user->load('roles'),
             'token'=>$token,
         ]);
    }
@@ -41,7 +46,7 @@ class AuthController
         }
         $token = $user->createToken('api-token')->plainTextToken;
         return response()->json([
-            'user'=> $user,
+            'user'=> $user->load('roles'),
             'token' => $token
         ]);
    }
