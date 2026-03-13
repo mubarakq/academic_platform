@@ -12,19 +12,27 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
+
+        $middleware->alias([
+            'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
+            'role' => \App\Http\Middleware\RoleMiddleware::class,
+        ]);
+
         $middleware->api([
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
-            'throttle:api',
         ]);
+
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         $exceptions->render(function (
             \Illuminate\Auth\AuthenticationException $e,
             $request
         ) {
-            return response()->json([
-                'message' => 'Unauthenticated.'
-            ], 401);
+            if($request->expectsJson()){
+                return response()->json([
+                    'message' => 'Unauthenticated.'
+                ], 401);
+            }
         });
     })
     ->create();

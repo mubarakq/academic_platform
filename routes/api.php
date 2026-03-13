@@ -10,12 +10,12 @@ Route::get('/test', function () {
         'message' => 'Api Working',
     ]);
 });
-
+// authentification
 Route::controller(AuthController::class)->group(function () {
     Route::post('/register', 'register');
     Route::post('/login', 'login');
 });
-
+// email verifications 
 Route::middleware('auth:sanctum')->group(function(){
 
     Route::get('/email/verify/{id}/{hash}', function (EmailVerificationRequest $request){
@@ -34,4 +34,28 @@ Route::middleware('auth:sanctum')->group(function(){
             'message' => 'Verification link sent!'
         ]);
     })->middleware('throttle:6,1')->name('verification.send');
+});
+// route for each roles only
+Route::middleware(['auth:sanctum','role:admin'])->group(function () {
+
+    Route::get('/admin', function(){
+        return 'Admin Only';
+    });
+
+});
+
+Route::middleware(['auth:sanctum','role:reviewer'])->group(function () {
+
+    Route::get('/review/papers', function(){
+        return 'Reviewer Panel';
+    });
+
+});
+
+Route::middleware(['auth:sanctum','role:admin,editor'])->group(function () {
+
+    Route::get('/manage/papers', function(){
+        return 'Manage Papers';
+    });
+
 });
