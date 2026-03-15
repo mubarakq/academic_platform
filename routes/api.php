@@ -4,6 +4,7 @@ use Illuminate\Foundation\Auth\EmailVerificationRequest;
 use App\Http\Controllers\Api\AuthController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Api\PaperController;
 
 Route::get('/test', function () {
     return response()->json([
@@ -57,5 +58,16 @@ Route::middleware(['auth:sanctum','role:admin,editor'])->group(function () {
     Route::get('/manage/papers', function(){
         return 'Manage Papers';
     });
+
+});
+
+
+Route::middleware(['auth:sanctum','role:user'])->group(function(){
+
+    Route::post('/papers', [PaperController::class,'store']);
+
+    Route::get('/my-papers', [PaperController::class,'myPapers']);
+
+    Route::delete('/papers/{id}', [PaperController::class,'destroy']);
 
 });
