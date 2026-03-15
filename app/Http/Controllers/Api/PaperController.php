@@ -46,4 +46,32 @@ class PaperController
             'message' =>'Papper deleted',
         ]);
     }
+
+    // for reviewer 
+    public function submittedPapers($id){
+        $papers = Paper::where('status','submitted')->get();
+        return response()->json($papers);
+    }
+
+    public function acceptedPapers($id){
+        $papers = Paper::findOrFail($id);
+
+        $papers->status = 'accepted';
+        $papers->save();
+        return response()->json([
+            'message'=>'Paper accepted',
+            'paper' => $papers,
+        ]);
+    }
+
+    public function rejectedPapers($id){
+        $papers = Paper::findOrFail($id);
+
+        $papers->status = 'rejected';
+        $papers->save();
+        return response()->json([
+            'message'=>'Paper rejected',
+            'paper' => $papers,
+        ]);
+    }
 }

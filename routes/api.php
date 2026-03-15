@@ -61,7 +61,7 @@ Route::middleware(['auth:sanctum','role:admin,editor'])->group(function () {
 
 });
 
-
+// for user paper
 Route::middleware(['auth:sanctum','role:user'])->group(function(){
 
     Route::post('/papers', [PaperController::class,'store']);
@@ -71,3 +71,15 @@ Route::middleware(['auth:sanctum','role:user'])->group(function(){
     Route::delete('/papers/{id}', [PaperController::class,'destroy']);
 
 });
+
+// for reviwer paper
+Route::middleware(['auth:sanctum','role:reviewer'])->group(function(){
+
+    Route::get('/review/papers', [PaperController::class,'submittedPapers']);
+
+    Route::post('/review/papers/{id}/accept', [PaperController::class,'acceptPaper']);
+
+    Route::post('/review/papers/{id}/reject', [PaperController::class,'rejectPaper']);
+
+});
+
