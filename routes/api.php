@@ -83,3 +83,11 @@ Route::middleware(['auth:sanctum','role:reviewer'])->group(function(){
 
 });
 
+// for editor 
+Route::middleware(['auth:sanctum','role:editor,admin'])->group(function(){
+
+    Route::get('/editor/papers', [PaperController::class,'acceptedPapers']);
+
+    Route::post('/editor/papers/{id}/publish', [PaperController::class,'publishPaper']);
+
+});

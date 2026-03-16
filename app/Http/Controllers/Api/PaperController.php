@@ -74,4 +74,31 @@ class PaperController
             'paper' => $papers,
         ]);
     }
+
+    // for editor
+    public function publishPaper($id)
+    {
+    $paper = Paper::findOrFail($id);
+
+    if ($paper->status !== 'accepted') {
+            return response()->json([
+                'message' => 'Only accepted papers can be published'
+            ], 400);
+        }
+
+        $paper->status = 'published';
+        $paper->save();
+
+        return response()->json([
+            'message' => 'Paper published successfully',
+            'paper' => $paper
+        ]);
+    }
+
+    public function viewAcceptedPapers()
+    {
+        $papers = Paper::where('status', 'accepted')->get();
+
+        return response()->json($papers);
+    }
 }
