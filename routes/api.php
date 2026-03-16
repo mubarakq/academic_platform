@@ -81,6 +81,7 @@ Route::middleware(['auth:sanctum','role:reviewer'])->group(function(){
 
     Route::post('/review/papers/{id}/reject', [PaperController::class,'rejectPaper']);
 
+    Route::post('/review/papers/{id}', [PaperController::class,'reviewPaper']);
 });
 
 // for editor 

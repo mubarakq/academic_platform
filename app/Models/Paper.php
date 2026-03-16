@@ -20,4 +20,8 @@ class Paper extends Model
         return $this->belongsTo(User::class);
     } 
     
+     public function reviews()
+    {
+        return $this->hasMany(Review::class);
+    }
 }

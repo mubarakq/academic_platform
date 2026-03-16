@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Models\Paper;
+use App\Models\Review;
 use Illuminate\Http\Request;
 
 class PaperController
@@ -61,6 +62,25 @@ class PaperController
         return response()->json([
             'message'=>'Paper accepted',
             'paper' => $papers,
+        ]);
+    }
+
+    public function reviewPaper(Request $request, $id){
+        $request->validate([
+            'comment'=>'required|string',
+            'recommendation'=>'require|accept,reject,revision',
+        ]);
+
+        $review = Review::create([
+            'paper_id'=>$id,
+            'reviewer'=>$request->user()->id,
+            'comment' =>$request->comment,
+            'recommendation' =>$request->recommendation
+        ]);
+
+        return response()->json([
+            'message'=>'Review Submitted',
+            'review' => $review,
         ]);
     }
 
